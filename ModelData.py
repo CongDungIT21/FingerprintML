@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 #Lấy và phần tích dữ liệu bằng thư viện Keras
 from keras.datasets import cifar10 #cifar10 là bộ ảnh
+from keras import layers
+from keras import models
 
 #Tải ảnh
 #X điểm màu
@@ -9,6 +11,7 @@ from keras.datasets import cifar10 #cifar10 là bộ ảnh
 #Xtran là tâm hình, YTrain là nhãn
 (Xtrain, Ytrain), (Xtest, Ytest) = cifar10.load_data()
 
+"""
 print(Xtrain.shape) #50000 ngàn tấm hình kích thước 32 32 Với 3 layer (RGB)
 
 # Y Train sẻ ra một số đại diện cho nhãn
@@ -25,3 +28,30 @@ def show_image(data, number):
     plt.show()
 
 show_image(Xtrain, 50)
+"""
+
+#Sequential Tạo chuổi
+#layers.Flatten(input_shape=(32, 32)) 32, 32 đây là kích thước tấm hình
+model_training_demo = models.Sequential([
+    layers.Flatten(input_shape=(32, 32, 3)),
+    layers.Dense(32 * 32, activation='relu'), #32 * 32 Khéo về dạng 32*32 nhãn
+    layers.Dense(1000, activation='relu'),
+    layers.Dense(10, activation='softmax'),
+    #Mục đích của 3 cái giảm dần là sử dụng Fylly connective để đưa về số lượng nhãn bé nhất
+])
+
+model_training_demo.summary()
+
+"""
+ flatten (Flatten)           (None, 3072) 32 * 32 * 3             0         
+                                                                 
+ dense (Dense)               (None, 1024)  32 * 32            3146752   Nối fullu connective của 3072 điểm với 1024 điểm
+                                                                 
+ dense_1 (Dense)             (None, 1000)              1025000   1024 * 1000 + 1000 bias
+                                                                 
+ dense_2 (Dense)             (None, 10)                10010  
+ 
+ Total params: 4181762 (15.95 MB) Bằng tổng của tất cả cột cuối cùng
+Trainable params: 4181762 (15.95 MB)
+Non-trainable params: 0 (0.00 Byte)
+"""
