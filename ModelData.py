@@ -36,6 +36,7 @@ def show_image(data, number):
 show_image(Xtrain, 50)
 """
 
+"""
 #Sequential Tạo chuổi
 #layers.Flatten(input_shape=(32, 32)) 32, 32 đây là kích thước tấm hình
 model_training_demo = models.Sequential([
@@ -61,6 +62,7 @@ model_training_demo.save('model-cifar10.h5')
 
 #Lưu lại model
 """
+"""
  flatten (Flatten)           (None, 3072) 32 * 32 * 3             0         
                                                                  
  dense (Dense)               (None, 1024)  32 * 32            3146752   Nối fullu connective của 3072 điểm với 1024 điểm
@@ -73,3 +75,13 @@ model_training_demo.save('model-cifar10.h5')
 Trainable params: 4181762 (15.95 MB)
 Non-trainable params: 0 (0.00 Byte)
 """
+
+# Load model
+models = models.load_model("model-cifar10.h5")
+# Dùng model để dự đoán dữ liệu test
+pred = models.predict(Xtest[50].reshape((-1, 32, 32, 3)))
+print(pred) # Kết quả trả về là xác xuất theo nhãn
+
+labels = ["Nhan 0", "Nhan 1", "Nhan 2", "Nhan 3", "Nhan 4", "Nhan 5", "Nhan 6", "Nhan 7", "Nhan 8", "Nhan 9", "Nhan 10"]
+#Lấy idx vị trí có xác xuất lớn nhất
+print(labels[np.argmax(pred)])
