@@ -4,12 +4,18 @@ import matplotlib.pyplot as plt
 from keras.datasets import cifar10 #cifar10 là bộ ảnh
 from keras import layers
 from keras import models
+from keras.utils import to_categorical
 
 #Tải ảnh
 #X điểm màu
 #Y nhãn
 #Xtran là tâm hình, YTrain là nhãn
 (Xtrain, Ytrain), (Xtest, Ytest) = cifar10.load_data()
+#Chuẩn hóa từ 255 xuống 0-1
+Xtrain, Xtest = Xtrain/255, Xtest/255
+
+#Chuyển Ytrain sang dạn (one hot coding): Để đảm bảo nhã là duy nhất
+Ytrain, Ytest = to_categorical(Ytrain), to_categorical(Ytest)
 
 """
 print(Xtrain.shape) #50000 ngàn tấm hình kích thước 32 32 Với 3 layer (RGB)
@@ -40,8 +46,20 @@ model_training_demo = models.Sequential([
     #Mục đích của 3 cái giảm dần là sử dụng Fylly connective để đưa về số lượng nhãn bé nhất
 ])
 
-model_training_demo.summary()
+# model_training_demo.summary()
+# Định nghĩa bộ complite model
+# optimizer='adan'
+# (optimizer='SGD') #stocbastic gradient decent
+#Tính toán mất mát
+model_training_demo.compile(optimizer='SGD',
+                            loss='categorical_crossentropy',
+                            metrics=['accuracy'])
 
+#epochs Số vòng lặp traing
+model_training_demo.fit(Xtrain, Ytrain, epochs=10)
+model_training_demo.save('model-cifar10.h5')
+
+#Lưu lại model
 """
  flatten (Flatten)           (None, 3072) 32 * 32 * 3             0         
                                                                  
